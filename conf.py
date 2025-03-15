@@ -17,7 +17,6 @@ BASE_URL = f"http://127.0.0.1:{PORT}/{SERVER_ID}/files"  # Заменить на
 SAVE_LOG_URL = config.get('settings', 'SAVE_LOG_URL')
 LOG_SECRET = config.get('settings', 'LOG_SECRET')
 SECRET = config.get('settings', 'SECRET')
-"""uvicorn app:app --host 127.0.0.1 --port 5000
-"""
+
 if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
