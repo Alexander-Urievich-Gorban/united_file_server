@@ -11,6 +11,11 @@ from fastapi import HTTPException
 
 from conf import UPLOAD_DIR, BASE_URL, LETTERS
 
+import subprocess
+from mutagen.mp3 import MP3
+from mutagen.wave import WAVE
+
+
 BACKGROUND_COLORS = [
     ((230, 230, 230), (0, 0, 0)),  # Светлый серый
     ((220, 220, 220), (0, 0, 0)),  # Серый
@@ -63,9 +68,6 @@ BACKGROUND_COLORS = [
     ((119, 136, 153), (255, 255, 255)),  # Синий серый
 ]
 
-import subprocess
-from mutagen.mp3 import MP3
-from mutagen.wave import WAVE
 
 
 def get_audio_duration(file_path: str) -> float:
@@ -84,7 +86,7 @@ def get_audio_duration(file_path: str) -> float:
 
 
 def get_video_duration(file_path: str) -> float:
-    """Определяет длительность видеофайла с помощью ffmpeg."""
+    """Определяет длительность видеофайла"""
     try:
         clip = VideoFileClip(file_path)
         duration = clip.duration
