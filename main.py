@@ -20,14 +20,8 @@ from services import validate_file, generate_video_preview, resize_image, genera
     get_file_url, get_audio_duration, get_video_duration
 
 app = FastAPI()
-# app.add_middleware(ErrorLoggingMiddleware)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Лучше явно указывать фронт, например: ["http://localhost:3000"]
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app.add_middleware(ErrorLoggingMiddleware)
+
 async def verify_secret(secret: str = Header(None)):
     """Проверка ключа в заголовке"""
     if secret != SECRET:
