@@ -44,7 +44,6 @@ class ErrorLoggingMiddleware(BaseHTTPMiddleware):
 
             return JSONResponse(status_code=500, content={"detail": "Internal Server Error"})
 
-        # Логируем ошибки 4xx и 5xx
         if response.status_code >= 200:
             log_data = {
                 "service_name": f"file server{SERVER_ID}",
