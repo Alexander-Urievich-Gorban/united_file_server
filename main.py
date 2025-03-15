@@ -14,7 +14,7 @@ from pydantic import BaseModel
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from conf import UPLOAD_DIR, SERVER_ID, PHOTO_SIZES, PHOTO_BLURED, AVATAR_SIZES, AVATAR_SIZES_STRINGS, LETTERS, SECRET
+from conf import UPLOAD_DIR, SERVER_ID, PHOTO_SIZES, PHOTO_BLURED, AVATAR_SIZES, AVATAR_SIZES_STRINGS, LETTERS, SECRET, PORT
 from logs import ErrorLoggingMiddleware
 from services import validate_file, generate_video_preview, resize_image, generate_image_from_string, BACKGROUND_COLORS, \
     get_file_url, get_audio_duration, get_video_duration
@@ -154,4 +154,4 @@ async def image_from_string(string: str, authorized: bool = Depends(verify_secre
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=5000)
+    uvicorn.run(app, host="127.0.0.1", port=PORT)
