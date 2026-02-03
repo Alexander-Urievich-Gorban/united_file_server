@@ -56,7 +56,15 @@ async def upload_file(file: UploadFile = File(...), authorized: bool = Depends(v
         raise HTTPException(detail=f"Invalid file type: {file_type}", status_code=400)
     unique_name = f"{uuid.uuid4().hex}.{ext}"
     file_path = os.path.join(UPLOAD_DIR, unique_name)
+    media = MediaFile(
+        filename=unique_name,
+        original_name=file.filename,
+        type=file_type,
+        url=get_file_url(file_path),
+    )
 
+    db.add(media)
+    await db.commit()
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
@@ -86,7 +94,7 @@ async def upload_file(file: UploadFile = File(...), authorized: bool = Depends(v
                         "urls": {"audio": get_file_url(file_path)}})
     else:
         os.remove(file_path)  # Неизвестные файлы удаляем
-
+    
     return results
 
 
