@@ -1,24 +1,51 @@
 import mimetypes
 import random
 import uuid
-from typing import List
-
-import uvicorn
-
 import shutil
 import os
+from typing import List
 from urllib.parse import quote, unquote
 
+import uvicorn
 from fastapi import FastAPI, UploadFile, File, HTTPException, Header, Depends
-from pydantic import BaseModel
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from conf import UPLOAD_DIR, SERVER_ID, PHOTO_SIZES, PHOTO_BLURED, AVATAR_SIZES, AVATAR_SIZES_STRINGS, LETTERS, SECRET, PORT
+from conf import (
+    UPLOAD_DIR,
+    SERVER_ID,
+    PHOTO_SIZES,
+    PHOTO_BLURED,
+    AVATAR_SIZES,
+    AVATAR_SIZES_STRINGS,
+    LETTERS,
+    SECRET,
+    PORT
+)
+
 from logs import ErrorLoggingMiddleware
-from services import validate_file, generate_video_preview, resize_image, generate_image_from_string, BACKGROUND_COLORS, \
-    get_file_url, get_audio_duration, get_video_duration
-from schemas import UserCreate, UserOut
+
+from services import (
+    validate_file,
+    generate_video_preview,
+    resize_image,
+    generate_image_from_string,
+    BACKGROUND_COLORS,
+    get_file_url,
+    get_audio_duration,
+    get_video_duration
+)
+
+from schemas import (
+    BlurRequest,
+    BlurResponse,
+    DeleteFilesRequest,
+    ImageUploadResponse,
+    VideoUploadResponse,
+    AudioUploadResponse,
+    AvatarUploadResponse,
+    FromStringResponse
+)
 
 app = FastAPI()
 app.add_middleware(ErrorLoggingMiddleware)
