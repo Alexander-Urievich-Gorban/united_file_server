@@ -48,7 +48,8 @@ async def blur_image(data: BlurRequest, authorized: bool = Depends(verify_secret
 
 
 @app.post("/upload/file")
-async def upload_file(file: UploadFile = File(...), authorized: bool = Depends(verify_secret)):
+async def upload_file(file: UploadFile = File(...), user=Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)):
     results = []
     ext = file.filename.split(".")[-1]
     file_type, _ = mimetypes.guess_type(file.filename)
@@ -57,9 +58,11 @@ async def upload_file(file: UploadFile = File(...), authorized: bool = Depends(v
     unique_name = f"{uuid.uuid4().hex}.{ext}"
     file_path = os.path.join(UPLOAD_DIR, unique_name)
     media = MediaFile(
+        user_id=user.id,
         filename=unique_name,
         original_name=file.filename,
         type=file_type,
+        duration=None,
         url=get_file_url(file_path),
     )
 
