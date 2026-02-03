@@ -124,21 +124,33 @@ async def upload_avatar(file: UploadFile = File(...), authorized: bool = Depends
 
 
 @app.post("/delete_files")
-async def delete_files(data: dict, authorized: bool = Depends(verify_secret)):
-    if "urls" not in data:
-        raise HTTPException(status_code=400, detail="No file URLs provided")
+async def delete_files(
+    data: DeleteFilesRequest,
+    user=Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    for url in data.urls:
+        filename = os.path.basename(unquote(str(url)))
 
-    for url in data['urls']:
-        filename = os.path.basename(unquote(url))
-        print(filename)
-        if len(filename) < 20:
-            print("url len(url) < 10", filename)
+        result = await db.execute(
+            select(MediaFile).where(
+                MediaFile.filename == filename,
+                MediaFile.user_id == user.id
+            )
+        )
+        media = result.scalar_one_or_none()
+
+        if not media:
             continue
+
         file_path = os.path.join(UPLOAD_DIR, filename)
         if os.path.exists(file_path):
             os.remove(file_path)
 
-    return {"message": "Files deleted successfully"}
+        await db.delete(media)
+
+    await db.commit()
+    return {"message": "Files deleted"}
 
 
 @app.get(f"/{SERVER_ID}/files/{{filename}}")
