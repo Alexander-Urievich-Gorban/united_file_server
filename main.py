@@ -18,6 +18,7 @@ from conf import UPLOAD_DIR, SERVER_ID, PHOTO_SIZES, PHOTO_BLURED, AVATAR_SIZES,
 from logs import ErrorLoggingMiddleware
 from services import validate_file, generate_video_preview, resize_image, generate_image_from_string, BACKGROUND_COLORS, \
     get_file_url, get_audio_duration, get_video_duration
+from schemas import UserCreate, UserOut
 
 app = FastAPI()
 app.add_middleware(ErrorLoggingMiddleware)
@@ -27,9 +28,17 @@ async def verify_secret(secret: str = Header(None)):
     if secret != SECRET:
         raise HTTPException(status_code=403, detail="Invalid SECRET")
     return True
-class BlurRequest(BaseModel):
-    url: str
-
+    
+@app.post("/users", response_model=UserOut)
+async def create_user(
+    data: UserCreate,
+    db: AsyncSession = Depends(get_db)
+):
+    user = User(api_key=data.api_key)
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+    return user
 
 @app.post("/blur_image")
 async def blur_image(data: BlurRequest, authorized: bool = Depends(verify_secret)):
