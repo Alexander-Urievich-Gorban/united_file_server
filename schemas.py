@@ -1,4 +1,3 @@
-from typing import List, Dict, Optional
 from pydantic import BaseModel, HttpUrl, Field
 from uuid import UUID
 from datetime import datetime
@@ -24,44 +23,44 @@ class BlurRequest(BaseModel):
 
 
 class DeleteFilesRequest(BaseModel):
-    urls: List[HttpUrl] = Field(..., min_items=1)
+    urls: list[HttpUrl] = Field(..., min_items=1)
 
 
 # ---------- RESPONSES ----------
 
 class ImageUrls(BaseModel):
-    original: Optional[HttpUrl] = None
-    sizes: Dict[str, HttpUrl]
+    original: HttpUrl | None = None
+    sizes: dict[str, HttpUrl]
 
 
 class ImageUploadResponse(BaseModel):
     file: str
     type: str = "image"
-    urls: Dict[str, HttpUrl]
+    urls: dict[str, HttpUrl]
 
 
 class VideoUploadResponse(BaseModel):
     file: str
     type: str = "video"
     duration: float
-    urls: Dict[str, HttpUrl]
+    urls: dict[str, HttpUrl]
 
 
 class AudioUploadResponse(BaseModel):
     file: str
     type: str = "audio"
     duration: float
-    urls: Dict[str, HttpUrl]
+    urls: dict[str, HttpUrl]
 
 
 class BlurResponse(BaseModel):
     file: str
-    blurred_urls: Dict[str, HttpUrl]
+    blurred_urls: dict[str, HttpUrl]
 
 
 class AvatarUploadResponse(BaseModel):
-    result: Dict[str, Dict[str, HttpUrl]]
+    result: dict[str, dict[str, HttpUrl]]
 
 
 class FromStringResponse(BaseModel):
-    result: Dict[str, Dict[str, HttpUrl]]
+    result: dict[str, dict[str, HttpUrl]]
