@@ -1,5 +1,20 @@
 from typing import List, Dict, Optional
 from pydantic import BaseModel, HttpUrl, Field
+from uuid import UUID
+from datetime import datetime
+
+
+class UserCreate(BaseModel):
+    api_key: str
+
+
+class UserOut(BaseModel):
+    id: UUID
+    api_key: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
 
 
 # ---------- REQUESTS ----------
